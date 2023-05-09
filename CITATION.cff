@@ -1,0 +1,22 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Great Deluge Time Optimization
+message: 'If you use this software, please cite it as below.'
+type: software
+authors:
+  - given-names: Adam
+    family-names: Glick
+    email: glicka@proton.me
+    orcid: 'https://orcid.org/0000-0002-6297-2580'
+repository-code: >-
+  https://github.com/glicka/GreatDeluge
+url: 'https://www.researchgate.net/profile/Adam-Glick-2'
+keywords:
+  - biomathematics
+  - time optimization
+  - great deluge
+  - optimal control
+version: 0.0.1
+date-released: '2023-05-09'
