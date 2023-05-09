@@ -3,7 +3,7 @@
 import numpy as np
 import os
 
-from greatdeluge.timeOptimalSystem import initializeSystem
+from greatdeluge import initializeSystem
 
 def main():
     """
