@@ -408,16 +408,20 @@ class systemVariables(constants):
                     """
                     multiplier2 = 1
                     u2old = 1/(1 - (self.tauXi/self.omegaXi)) * (np.exp(-self.lamOXi*(self.t[i] - tD2)) - np.exp(-self.lamXi*(self.t[i] - tD2)))
-                else:
+                    if len(self.tdso2) == 0:
+                        self.tdso2 += [u2[i]]
+                        self.tds2 += [self.t[i]]
+                elif multiplier2 == 1:
                     """
                     update tD2old and tD2
                     """
                     multiplier2 = 0
-                    u2[i] = u2old + 1/(1 - (self.tauXi/self.omegaXi)) * (np.exp(-self.lamOXi*(self.t[i] - tD2)) - np.exp(-self.lamXi*(self.t[i] - tD2))) / self.u2Multiplier
-                    tD2old = tD2
                     self.tds2 += [tD2]
                     self.tdso2 += [u2[i]]
+                    u2[i] = u2old #+ u2old * (np.exp(-self.lamOXi*(self.t[i] - tD2)) - np.exp(-self.lamXi*(self.t[i] - tD2))) / self.u2Multiplier
+                    tD2old = tD2
                     tD2 = self.t[i]
+                    u2old = u2[i-1]
             """
             Must ensure that control is smooth
             """    
@@ -426,20 +430,24 @@ class systemVariables(constants):
             elif np.any(phi2Saving < 0):
                 u2current = 1/(1 - (self.tauXi/self.omegaXi)) * (np.exp(-self.lamOXi*(self.t[i] - tD2)) - np.exp(-self.lamXi*(self.t[i] - tD2)))
                 if u2old > u2current and u2current > 1/(1 - (self.tauXi/self.omegaXi)) * (np.exp(-self.lamOXi*(self.t[i-1] - tD2)) - np.exp(-self.lamXi*(self.t[i-1] - tD2))):
-                    u2[i] = u2old + multiplier * u2current / self.u2Multiplier
-                    self.tds2 += [self.t[i]]
-                    self.tdso2 += [u2[i]]
-                    # if u2[i] == u2[i-1] and u2[i] != 0:
-                    #     self.tds2 += [self.t[i]]
-                    #     self.tdso2 += [u2[i]]
-                    # else:
-                    #     multiplier = 1
-                    #     u2[i] = u2old + multiplier * u2current / self.u2Multiplier    
-
+                    if u2[i-1] != 1./self.u2Multiplier:
+                        u2[i] = u2old + u2old * u2current / (self.u2Multiplier * 1/(1 - (self.tauXi/self.omegaXi)) )
+                    else:
+                        u2[i] = 1./self.u2Multiplier
+                        self.tdso2 += [u2[i]]
+                        self.tds2 += [self.t[i]]
+                    if multiplier2 == 0:
+                        self.tdso2 += [u2[i]]
+                        self.tds2 += [self.t[i]]
+                        multiplier2 = 2
                 else:
                     u2[i] = u2current 
-                    u2old = u2current
-
+                    # u2old = u2current
+            if self.u2Multiplier*u2[i] > 1.0 and phi2 < 0:
+                u2[i] = 1.0/self.u2Multiplier
+                self.tdso2 += [u2[i]]
+                self.tds2 += [self.t[i]]
+                u2old = u2[i]
             decayU2[i] = u2[i]
             try:
                 if self.t[i] == self.tds2[-1]:
@@ -463,7 +471,7 @@ class systemVariables(constants):
         if max(self.decayU2Work) > 1:
             self.tdso2 /= max(self.decayU2Work)
             self.decayU2Work /= max(self.decayU2Work)
-
+ 
         if max(self.decayU1Work) > 1:
             self.tdso1 /= max(self.decayU1Work)
             self.decayU1Work /= max(self.decayU1Work)

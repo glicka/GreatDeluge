@@ -10,11 +10,11 @@ def main():
     Comment out these lines if changing chemo effect on immune
     system
     """
-    # try:
-    #     os.mkdir('GreatDelugeEInorm')
-    #     os.chdir('GreatDelugeEInorm')
-    # except:
-    #     os.chdir('GreatDelugeEInorm')
+    try:
+        os.mkdir('GreatDelugeEInorm')
+        os.chdir('GreatDelugeEInorm')
+    except:
+        os.chdir('GreatDelugeEInorm')
 
     """
     Initialize system
@@ -30,12 +30,12 @@ def main():
     #     os.chdir('GreatDelugeEIneg')
     # except:
     #     os.chdir('GreatDelugeEIneg')
-    system.eI = 0             # chemotherapy has NO EFFECT on immune system
-    try:
-        os.mkdir('GreatDelugeEI0')
-        os.chdir('GreatDelugeEI0')
-    except:
-        os.chdir('GreatDelugeEI0')
+    # system.eI = 0             # chemotherapy has NO EFFECT on immune system
+    # try:
+    #     os.mkdir('GreatDelugeEI0')
+    #     os.chdir('GreatDelugeEI0')
+    # except:
+    #     os.chdir('GreatDelugeEI0')
 
     tracker = 0
     iteration = 0
